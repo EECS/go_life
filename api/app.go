@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
@@ -14,5 +16,11 @@ func main(){
 		return ctx.Send([]byte ("Welcome to the Game of Life!"))
 	})
 
-	_ = app.Listen(":8080")
+	port := os.Getenv("PORT")
+
+	if port == ""{
+		port = "8080"
+	}
+
+	_ = app.Listen(":"+port)
 }
