@@ -53,5 +53,9 @@ func main(){
 		}
 	}))
 
-	log.Fatal(app.Listen(":"+port))
+	err := app.Listen(":"+port)
+
+	if err != nil{
+		log.Fatal(err.Error())
+	}
 }
