@@ -57,20 +57,21 @@ func main() {
 			log.Printf("recv: %s", msg)
 
 			log.Println("current connectionID:", connectionID)
-			for loopConID, conection := range _connections {
+			for loopConID, connection := range _connections {
 				log.Println("conLoop:", loopConID)
 				if loopConID == connectionID {
 					log.Println("Skipping:", loopConID)
 					continue
 				}
-				conection.WriteMessage(1, msg) //<- For some reason this is STILL sending the message to the connection we skipped... (see console log in browser)
-				log.Println("Sending to: "+conection.Params("id"), msg)
+
+				// Send Msg, print if error sending
+				if err = connection.WriteMessage(1, msg); err != nil {
+					log.Println("write:", err, mt)
+					break
+				}
+				log.Println("Sending to: "+connection.Params("id"), msg)
 			}
 
-			if err = c.WriteMessage(mt, msg); err != nil {
-				log.Println("write:", err)
-				break
-			}
 		}
 
 	}))

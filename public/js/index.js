@@ -1,6 +1,6 @@
 window.onload = function () {
     var conn;
-    var msg = document.getElementById("msg");
+    var msgInputBox = document.getElementById("msg");
     var log = document.getElementById("log");
 
     function appendLog(item) {
@@ -16,11 +16,12 @@ window.onload = function () {
       if (!conn) {
         return false;
       }
-      if (!msg.value) {
+      if (!msgInputBox.value) {
         return false;
       }
-      conn.send(msg.value);
-      msg.value = "";
+      addMessage(msgInputBox.value);
+      conn.send(msgInputBox.value);      
+      msgInputBox.value = "";
       return false;
     };
 
@@ -39,9 +40,7 @@ window.onload = function () {
         console.log(evt);
         var messages = evt.data.split("\n");
         for (var i = 0; i < messages.length; i++) {
-          var item = document.createElement("div");
-          item.innerText = messages[i];
-          appendLog(item);
+          addMessage(messages[i]);
         }
       };
     } else {
@@ -49,4 +48,13 @@ window.onload = function () {
       item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
       appendLog(item);
     }
+
+    function addMessage(msg){
+      console.log(msg);
+      var item = document.createElement("div");
+          item.innerText = msg;
+          appendLog(item);
+    }
+
   };
+
