@@ -19,8 +19,7 @@ window.onload = function () {
       if (!msgInputBox.value) {
         return false;
       }
-      addMessage(msgInputBox.value);
-      conn.send(msgInputBox.value);      
+      sendMessage(msgInputBox.value);      
       msgInputBox.value = "";
       return false;
     };
@@ -54,6 +53,10 @@ window.onload = function () {
       var item = document.createElement("div");
           item.innerText = msg;
           appendLog(item);
+    }
+    function sendMessage(msg){
+      addMessage(msg);
+      conn.send(msg);
     }
 
   };
