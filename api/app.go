@@ -30,12 +30,13 @@ func main() {
 		return fiber.ErrUpgradeRequired
 	})
 
-	var _connections map[string]websocket.Conn = make(map[string]websocket.Conn)
+	var _connections map[int]websocket.Conn = make(map[int]websocket.Conn)
+	var conCounter = 1
 
-	app.Get("/ws/:id", websocket.New(func(c *websocket.Conn) {
+	app.Get("/ws/", websocket.New(func(c *websocket.Conn) {
 		// c.Locals is added to the *websocket.Conn
-		log.Println(c.Locals("allowed"))  // true
-		log.Println(c.Params("id"))       // 123
+		log.Println(c.Locals("allowed")) // true
+		//log.Println(c.Params("id"))       // 123
 		log.Println(c.Query("v"))         // 1.0
 		log.Println(c.Cookies("session")) // ""
 
@@ -45,7 +46,9 @@ func main() {
 			msg []byte
 			err error
 		)
-		var connectionID string = c.Params("id")
+		var connectionID int = conCounter
+		conCounter++
+
 		_connections[connectionID] = *c
 
 		for {

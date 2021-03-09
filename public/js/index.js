@@ -1,63 +1,50 @@
-window.onload = function () {
-    var conn;
-    var msgInputBox = document.getElementById("msg");
-    var log = document.getElementById("log");
 
-    function appendLog(item) {
-      var doScroll =
-        log.scrollTop > log.scrollHeight - log.clientHeight - 1;
-      log.appendChild(item);
-      if (doScroll) {
-        log.scrollTop = log.scrollHeight - log.clientHeight;
-      }
-    }
+// The application will create a renderer using WebGL, if possible,
+// with a fallback to a canvas render. It will also setup the ticker
+// and the root stage PIXI.Container
+let PixiApp = new PIXI.Application({ 
+  width: 800,         // default: 800
+  height: 600,        // default: 600
+  antialias: true,    // default: false
+  transparent: false, // default: false
+  resolution: 1,       // default: 1
+  backgroundColor: 0xd1e675
+}
+);
 
-    document.getElementById("form").onsubmit = function () {
-      if (!conn) {
-        return false;
-      }
-      if (!msgInputBox.value) {
-        return false;
-      }
-      sendMessage(msgInputBox.value);      
-      msgInputBox.value = "";
-      return false;
-    };
+let PixiLoader = PIXI.Loader.shared;
+let PixiResources = PixiLoader.resources;
+let PixiSprite = PIXI.Sprite;
 
-    var id = Date.now();
 
-    if (window["WebSocket"]) {
-        //ws://localhost:8080/ws/123?v=1.0
-      conn = new WebSocket("ws://" + document.location.host + "/ws/" + id);
-      conn.onclose = function (evt) {
-        var item = document.createElement("div");
-        item.innerHTML = "<b>Connection closed.</b>";
-        appendLog(item);
-      };
-      conn.onmessage = function (evt) {
-        console.log("msg:");
-        console.log(evt);
-        var messages = evt.data.split("\n");
-        for (var i = 0; i < messages.length; i++) {
-          addMessage(messages[i]);
-        }
-      };
-    } else {
-      var item = document.createElement("div");
-      item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
-      appendLog(item);
-    }
+function pixiInit(){
+// Insert the pixi cavas into the dom 
+document.body.appendChild(PixiApp.view);
 
-    function addMessage(msg){
-      console.log(msg);
-      var item = document.createElement("div");
-          item.innerText = msg;
-          appendLog(item);
-    }
-    function sendMessage(msg){
-      addMessage(msg);
-      conn.send(msg);
-    }
+//make the pixi textures 
+loadSprites();
 
-  };
+//start the game
+gameLoop();
+}
 
+let imageLocs = ["../images/sheep.png"];
+
+function loadSprites(){
+  //load an image and run the `setup` function when it's done
+  PixiLoader
+  .add(imageLocs)
+  .load(addSprites);
+}
+
+function addSprites(){
+
+  //Create the sheep sprite
+  let sheep = new PixiSprite(PixiResources["../images/sheep.png"].texture);
+  
+  //Add the sheep to the stage
+  PixiApp.stage.addChild(sheep);
+}
+
+function gameLoop(){
+}
