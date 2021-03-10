@@ -25,6 +25,8 @@ if (window["WebSocket"]) {
 
 function messageReceived(msg){
   output(msg);
+  
+  // defined in index.js
   handleMessage(msg);
 }
 
